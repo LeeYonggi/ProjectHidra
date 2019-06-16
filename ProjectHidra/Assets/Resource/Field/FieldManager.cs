@@ -26,37 +26,49 @@ public class FieldManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonUp(0))
-        {
-            Ray2D ray = MouseManager.Instance.GetMouseRay2D();
-            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-            if(hit.collider != null)
-                Debug.Log(hit.collider.gameObject);
-        }
-
+        TileTouch();
     }
 
+    // 타일 배치
     void PlaceTiles(Vector3 pivot, Vector2 size, Vector2 spriteSize)
     {
         for (int x = 0; x < size.x; x++)
         {
-            for (int y = 0; y < size.x; y++)
+            float sizeY = (size.y) - Mathf.Abs(2 - x);
+            for (int y = 0; y < sizeY; y++)
             {
                 GameObject obj = Instantiate(tilePrefab, transform);
-                Vector2 firstPosition = size * spriteSize;
-
-                firstPosition = Vector2.zero - (firstPosition * 0.5f);
+                Vector2 firstPosition = Vector2.zero - (size * spriteSize * 0.5f);
 
                 float width  = spriteSize.x * x;
                 float height = spriteSize.y * y;
-                if (x % 2 == 1)
-                    height = height - spriteSize.y * 0.5f;
+                
+                height = height - spriteSize.y * sizeY * 0.5f;
 
                 obj.transform.position = new Vector3(firstPosition.x + width,
-                    firstPosition.y + height, transform.position.z);
+                    height, transform.position.z);
 
             }
         }
+    }
+
+    // 터치
+    void TileTouch()
+    {
+        if(Input.touchCount > 0)
+        {
+            Ray2D ray = MouseManager.Instance.GetTouchRay2D();
+            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+            
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            Ray2D ray = MouseManager.Instance.GetMouseRay2D();
+            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+
+            //if (hit.collider != null)
+            //    Debug.Log(hit.collider.gameObject);
+        }
+
     }
 }

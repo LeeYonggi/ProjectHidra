@@ -32,6 +32,12 @@ public class MouseManager : MonoBehaviour
 
     }
 
+    public Ray2D GetTouchRay2D()
+    {
+        Vector3 screenPos = mainCamera.ScreenToWorldPoint(Input.GetTouch(0).position);
+        Ray2D hit = new Ray2D(screenPos, Vector2.zero);
+        return hit;
+    }
     public Ray2D GetMouseRay2D()
     {
         Vector2 worldPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
