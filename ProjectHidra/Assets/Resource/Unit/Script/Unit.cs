@@ -148,6 +148,8 @@ public class UnitAttackMachine : UnitStateMachine
             }
             else
                 unit.ChangeFlip(new Vector2(1, 1));
+            
+            // 위로 갈 때 변경
 
             unit.Weapon.transform.rotation = Quaternion.Euler(0f, 0f, rot_z);
         }
