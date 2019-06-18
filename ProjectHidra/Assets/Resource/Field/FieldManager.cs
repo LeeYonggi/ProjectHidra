@@ -38,15 +38,15 @@ public class FieldManager : MonoBehaviour
             for (int y = 0; y < sizeY; y++)
             {
                 GameObject obj = Instantiate(tilePrefab, transform);
-                Vector2 firstPosition = Vector2.zero - (size * spriteSize * 0.5f);
+                float firstPosition = 0 - (size.x * spriteSize.x * 0.4f);
 
                 float width  = spriteSize.x * x;
                 float height = spriteSize.y * y;
                 
                 height = height - spriteSize.y * sizeY * 0.5f;
 
-                obj.transform.position = new Vector3(firstPosition.x + width,
-                    height, transform.position.z);
+                obj.transform.position = new Vector3(firstPosition + width,
+                    spriteSize.y * 0.5f + height, transform.position.z);
 
             }
         }

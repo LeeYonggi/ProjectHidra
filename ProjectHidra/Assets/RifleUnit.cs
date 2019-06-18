@@ -37,7 +37,7 @@ public class RifleUnit : Unit
     {
         if (IsRifleAttack(target))
         {
-            unitStateMachine = new UnitAttackMachine(target);
+            ChangeStateMachine(new UnitAttackMachine(target));
         }
     }
 }
