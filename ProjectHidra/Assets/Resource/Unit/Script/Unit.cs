@@ -101,7 +101,10 @@ public class UnitIdle : UnitStateMachine
     public void Update(Unit unit)
     {
         unit.Animator.SetInteger("AnimationState", (int)Unit.ANIMATION_STATE.IDLE);
-        unit.ChangeStateMachine(new UnitMove(FindShortDistanceBuilding(unit)));
+
+        GameObject target = FindShortDistanceBuilding(unit);
+        if(target)
+            unit.ChangeStateMachine(new UnitMove(target));
     }
 
     public GameObject FindShortDistanceBuilding(Unit unit)

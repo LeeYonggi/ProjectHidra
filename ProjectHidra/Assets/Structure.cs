@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tile : MonoBehaviour
+public class Structure : MonoBehaviour
 {
-    public GameObject structure;
-
     // Start is called before the first frame update
     void Start()
     {
