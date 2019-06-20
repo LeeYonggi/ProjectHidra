@@ -14,9 +14,11 @@ public class FieldManager : MonoBehaviour
 
     private Vector2 tileSpriteSize = new Vector2(0, 0);
 
+    public List<GameObject> TileList { get => tileList; set => tileList = value; }
+
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         tileSpriteSize = tilePrefab.GetComponent<SpriteRenderer>().bounds.size;
         tileSpriteSize.x *= 0.7f;

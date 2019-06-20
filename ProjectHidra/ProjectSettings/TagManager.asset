@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Unit
   - Building
+  - Tile
+  - AfterImage
   layers:
   - Default
   - TransparentFX
@@ -45,4 +47,16 @@ TagManager:
     locked: 0
   - name: Background
     uniqueID: 1769417959
+    locked: 0
+  - name: Building
+    uniqueID: 2910130857
+    locked: 0
+  - name: BackGun
+    uniqueID: 2336285435
+    locked: 0
+  - name: Unit
+    uniqueID: 1315347665
+    locked: 0
+  - name: FrontGun
+    uniqueID: 612249691
     locked: 0

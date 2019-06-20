@@ -27,6 +27,7 @@ public abstract class Unit : MonoBehaviour
     // 무기
     [SerializeField]
     private GameObject weapon = null;
+    private SpriteRenderer weaponSprite = null;
 
     // 상태머신
     private UnitStateMachine unitStateMachine = new UnitIdle();
@@ -51,6 +52,7 @@ public abstract class Unit : MonoBehaviour
     public Vector2 MoveVector { get => moveVector; set => moveVector = value; }
     public float ShootSpeed { get => shootSpeed; set => shootSpeed = value; }
     public GameObject Weapon { get => weapon; set => weapon = value; }
+    public SpriteRenderer WeaponSprite { get => weaponSprite; set => weaponSprite = value; }
     #endregion
 
     public Unit(UnitAttackState state)
@@ -61,6 +63,7 @@ public abstract class Unit : MonoBehaviour
     protected void Init()
     {
         Animator = GetComponent<Animator>();
+        weaponSprite = weapon.GetComponent<SpriteRenderer>();
     }
     
     // Update is called once per frame
@@ -101,12 +104,13 @@ public class UnitIdle : UnitStateMachine
         unit.ChangeStateMachine(new UnitMove(FindShortDistanceBuilding(unit)));
     }
 
-    public Vector2 FindShortDistanceBuilding(Unit unit)
+    public GameObject FindShortDistanceBuilding(Unit unit)
     {
         GameObject[] building = GameObject.FindGameObjectsWithTag("Building");
 
         float shortDistance = -1;
-        Vector2 position = new Vector2(0, 0);
+        GameObject target = null;
+
         for(int i = 0; i < building.Length; i++)
         {
             float distance = Vector2.Distance(building[i].transform.position, unit.transform.position);
@@ -114,10 +118,10 @@ public class UnitIdle : UnitStateMachine
             if (distance < shortDistance || shortDistance == -1)
             {
                 shortDistance = distance;
-                position = building[i].transform.position;
+                target = building[i];
             }
         }
-        return position;
+        return target;
     }
 
     public void SendMessage(string message)
@@ -128,18 +132,18 @@ public class UnitIdle : UnitStateMachine
 
 public class UnitMove : UnitStateMachine
 {
-    private Vector2 targetVec2 = Vector2.zero;
+    private GameObject target = null;
 
-    public UnitMove(Vector2 target)
+    public UnitMove(GameObject _target)
     {
-        targetVec2 = target;
+        target = _target;
     }
 
     public void Update(Unit unit)
     {
         unit.Animator.SetInteger("AnimationState", (int)Unit.ANIMATION_STATE.MOVE);
         unit.Animator.SetFloat("MoveSpeed", unit.Speed);
-        unit.transform.position = Vector2.MoveTowards(unit.transform.position, targetVec2, unit.Speed * Time.deltaTime);
+        unit.transform.position = Vector2.MoveTowards(unit.transform.position, target.transform.position, unit.Speed * Time.deltaTime);
     }
 
     public void SendMessage(string message)
@@ -170,12 +174,11 @@ public class UnitAttackMachine : UnitStateMachine
             float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
 
             // 위를 가르킬 때 변경
-            Vector3 weaponPos = unit.Weapon.transform.position;
+            SpriteRenderer weaponSprite = unit.WeaponSprite;
             if (rot_z >= 0)
-                weaponPos.z = 0.1f;
+                weaponSprite.sortingLayerName = "BackGun";
             else
-                weaponPos.z = 0.0f;
-            unit.Weapon.transform.position = weaponPos;
+                weaponSprite.sortingLayerName = "FrontGun";
 
             // 방향 바꾸기
             if (rot_z >= 90 || rot_z <= -90)
