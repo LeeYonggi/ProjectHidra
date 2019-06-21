@@ -7,14 +7,14 @@ public class FieldManager : MonoBehaviour
     [SerializeField]
     private GameObject tilePrefab;
 
-    private List<GameObject> tileList = new List<GameObject>();
+    private List<List<GameObject>> tileList = new List<List<GameObject>>();
 
     [SerializeField]
     private Vector2 tileSize;
 
     private Vector2 tileSpriteSize = new Vector2(0, 0);
 
-    public List<GameObject> TileList { get => tileList; set => tileList = value; }
+    public List<List<GameObject>> TileList { get => tileList; set => tileList = value; }
 
 
     // Start is called before the first frame update
@@ -36,7 +36,15 @@ public class FieldManager : MonoBehaviour
     {
         for (int x = 0; x < size.x; x++)
         {
-            float sizeY = (size.y) - Mathf.Abs(2 - x);
+            int sizeY = (int)(size.y) - Mathf.Abs((int)(size.y * 0.5f) - x);
+            tileList.Add(new List<GameObject>());
+
+            int emptyNum = (int)size.y - sizeY;
+            int empty = emptyNum;
+            for (empty = emptyNum; empty > emptyNum * 0.5f; empty--)
+            {
+                tileList[x].Add(null);
+            }
             for (int y = 0; y < sizeY; y++)
             {
                 GameObject obj = Instantiate(tilePrefab, transform);
@@ -50,6 +58,11 @@ public class FieldManager : MonoBehaviour
                 obj.transform.position = new Vector3(firstPosition + width,
                     spriteSize.y * 0.5f + height, transform.position.z);
 
+                tileList[x].Add(obj);
+            }
+            for (empty = emptyNum; empty > emptyNum * 0.5f; empty--)
+            {
+                tileList[x].Add(null);
             }
         }
     }
@@ -59,13 +72,13 @@ public class FieldManager : MonoBehaviour
     {
         if(Input.touchCount > 0)
         {
-            Ray2D ray = MouseManager.Instance.GetTouchRay2D();
+            Ray2D ray = MouseManager.Instance.GetTouchRay2D(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
             
         }
         if (Input.GetMouseButtonUp(0))
         {
-            Ray2D ray = MouseManager.Instance.GetMouseRay2D();
+            Ray2D ray = MouseManager.Instance.GetMouseRay2D(Input.GetTouch(0).position);
             RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
 
             //if (hit.collider != null)

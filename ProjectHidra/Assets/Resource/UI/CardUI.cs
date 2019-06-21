@@ -83,7 +83,7 @@ public class CardUI : MonoBehaviour
         // 타일 충돌
         if (Input.GetMouseButton(0) && transform.position.y > 100)
         {
-            Ray2D ray = MouseManager.Instance.GetMouseRay2D();
+            Ray2D ray = MouseManager.Instance.GetMouseRay2D(Input.mousePosition);
             RaycastHit2D[] hit = Physics2D.RaycastAll(ray.origin, ray.direction);
 
             for (int i = 0; i < hit.Length; i++)

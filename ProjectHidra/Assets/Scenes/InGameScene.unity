@@ -291,7 +291,7 @@ GameObject:
   - component: {fileID: 722456352}
   - component: {fileID: 722456351}
   m_Layer: 0
-  m_Name: DijkstraManager
+  m_Name: AstarManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
