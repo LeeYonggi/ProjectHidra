@@ -5,6 +5,9 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     public GameObject structure;
+    private bool isWall = false;
+
+    public bool IsWall { get => isWall; set => isWall = value; }
 
     // Start is called before the first frame update
     void Start()

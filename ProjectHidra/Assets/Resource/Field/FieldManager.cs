@@ -23,12 +23,13 @@ public class FieldManager : MonoBehaviour
         tileSpriteSize = tilePrefab.GetComponent<SpriteRenderer>().bounds.size;
         tileSpriteSize.x *= 0.7f;
         PlaceTiles(transform.position, tileSize, tileSpriteSize);
+        tileList[3][3].GetComponent<Tile>().IsWall = true;
+        tileList[3][1].GetComponent<Tile>().IsWall = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        TileTouch();
     }
 
     // 타일 배치
@@ -66,24 +67,5 @@ public class FieldManager : MonoBehaviour
             }
         }
     }
-
-    // 터치
-    void TileTouch()
-    {
-        if(Input.touchCount > 0)
-        {
-            Ray2D ray = MouseManager.Instance.GetTouchRay2D(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-            
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            Ray2D ray = MouseManager.Instance.GetMouseRay2D(Input.GetTouch(0).position);
-            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-
-            //if (hit.collider != null)
-            //    Debug.Log(hit.collider.gameObject);
-        }
-
-    }
+    
 }

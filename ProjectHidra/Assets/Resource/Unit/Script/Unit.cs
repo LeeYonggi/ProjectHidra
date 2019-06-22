@@ -104,7 +104,7 @@ public class UnitIdle : UnitStateMachine
 
         GameObject target = FindShortDistanceBuilding(unit);
         if(target)
-            unit.ChangeStateMachine(new UnitMove(target));
+            unit.ChangeStateMachine(new UnitMove(target, unit));
     }
 
     public GameObject FindShortDistanceBuilding(Unit unit)
@@ -136,17 +136,25 @@ public class UnitIdle : UnitStateMachine
 public class UnitMove : UnitStateMachine
 {
     private GameObject target = null;
+    private List<Vector2> path;
+    private int nowPath = 0;
 
-    public UnitMove(GameObject _target)
+    public UnitMove(GameObject _target, Unit unit)
     {
         target = _target;
+        path = AstarManager.Instance.AstarPathFinder(unit.transform.position, target.transform.position);
+        nowPath = path.Count - 1;
     }
 
     public void Update(Unit unit)
     {
         unit.Animator.SetInteger("AnimationState", (int)Unit.ANIMATION_STATE.MOVE);
         unit.Animator.SetFloat("MoveSpeed", unit.Speed);
-        unit.transform.position = Vector2.MoveTowards(unit.transform.position, target.transform.position, unit.Speed * Time.deltaTime);
+        unit.transform.position = Vector2.MoveTowards(unit.transform.position, path[nowPath], unit.Speed * Time.deltaTime);
+        unit.MoveVector = path[nowPath] - new Vector2(unit.transform.position.x, unit.transform.position.y);
+        unit.MoveVector.Normalize();
+        if (unit.transform.position.Equals(path[nowPath]) && nowPath != 0)
+            nowPath -= 1;
     }
 
     public void SendMessage(string message)
