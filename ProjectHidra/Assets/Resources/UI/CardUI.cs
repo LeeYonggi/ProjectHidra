@@ -28,7 +28,7 @@ public class CardUI : MonoBehaviour
     private Vector2 basicPosition;
 
     // 건물
-    private GameObject structure = null;
+    private GameObject tile = null;
 
     // Start is called before the first frame update
     void Start()
@@ -47,10 +47,11 @@ public class CardUI : MonoBehaviour
     {
         if (isEnterCard)
         {
-            Debug.Log(Input.mousePosition);
+            // 이동 관련
             transform.position = Vector3.Lerp(transform.position, Input.mousePosition, 5 * Time.deltaTime);
             float distance = Vector2.Distance(new Vector2(basicPosition.x, transform.position.y), basicPosition);
             transform.localScale = new Vector2(Mathf.Max(0, 1 - distance * 0.004f), Mathf.Max(0, 1 - distance * 0.004f));
+            
 
             if (Input.GetMouseButtonUp(0))
             {
@@ -74,8 +75,12 @@ public class CardUI : MonoBehaviour
     public void OnPointerUp()
     {
         isEnterCard = false;
-        if (structure)
-            structure.GetComponent<Tile>().structure = Instantiate(targetPrefab, structure.transform);
+        if (tile)
+        {
+            GameObject structure = Instantiate(targetPrefab, tile.transform);
+            tile.GetComponent<Tile>().structure = structure;
+            structure.GetComponent<Structure>().AddUnitPrefab("RifleUnit");
+        }
     }
 
     void PointPress()
@@ -96,7 +101,7 @@ public class CardUI : MonoBehaviour
                     image.enabled = false;
                     afterImageObject.SetActive(true);
 
-                    structure = hit[i].collider.gameObject;
+                    tile = hit[i].collider.gameObject;
                 }
             }
         }
@@ -104,7 +109,7 @@ public class CardUI : MonoBehaviour
         {
             image.enabled = true;
             afterImageObject.SetActive(false);
-            structure = null;
+            tile = null;
         }
     }
 }

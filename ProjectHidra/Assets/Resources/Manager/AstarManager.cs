@@ -202,8 +202,8 @@ public class AstarManager : MonoBehaviour
         int a = tile1.h + tile1.g;
         int b = tile2.h + tile2.g;
         if (a == b)
-            return -tile1.h.CompareTo(tile2.h);
-        return -a.CompareTo(b);
+            return tile1.h.CompareTo(tile2.h);
+        return a.CompareTo(b);
     }
 
     // a스타 재귀함수
