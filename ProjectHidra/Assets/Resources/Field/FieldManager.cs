@@ -23,8 +23,6 @@ public class FieldManager : MonoBehaviour
         tileSpriteSize = tilePrefab.GetComponent<SpriteRenderer>().bounds.size;
         tileSpriteSize.x *= 0.7f;
         PlaceTiles(transform.position, tileSize, tileSpriteSize);
-        tileList[3][3].GetComponent<Tile>().IsWall = true;
-        tileList[3][1].GetComponent<Tile>().IsWall = true;
     }
 
     // Update is called once per frame

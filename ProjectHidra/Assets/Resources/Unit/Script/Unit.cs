@@ -44,7 +44,11 @@ public abstract class Unit : MonoBehaviour
     // 스텟 관련
     [SerializeField]
     private float shootSpeed = 1.0f;
+    [SerializeField]
+    private UNIT_KIND unitKind;
+    private ObjectStatus status;
     
+
     #region Property
     public UnitAttackState UnitAttack { get => unitAttack; set => unitAttack = value; }
     public Animator Animator { get => animator; set => animator = value; }
@@ -53,11 +57,15 @@ public abstract class Unit : MonoBehaviour
     public float ShootSpeed { get => shootSpeed; set => shootSpeed = value; }
     public GameObject Weapon { get => weapon; set => weapon = value; }
     public SpriteRenderer WeaponSprite { get => weaponSprite; set => weaponSprite = value; }
+    public UNIT_KIND UnitKind { get => unitKind; set => unitKind = value; }
+    public ObjectStatus Status { get => status; set => status = value; }
     #endregion
 
     public Unit(UnitAttackState state)
     {
         UnitAttack = state;
+        Status = new ObjectStatus(ObjectStatus.TEAM_KIND.TEAM_BLUE,
+            100, 5, 20);
     }
     // Start is called before the first frame update
     protected void Init()
@@ -103,8 +111,12 @@ public class UnitIdle : UnitStateMachine
         unit.Animator.SetInteger("AnimationState", (int)Unit.ANIMATION_STATE.IDLE);
 
         GameObject target = FindShortDistanceBuilding(unit);
-        if(target)
-            unit.ChangeStateMachine(new UnitMove(target.transform.position, unit));
+        if (target)
+        {
+            UnitMove unitMove = new UnitMove();
+            unitMove.UnitAstarMove(target.transform.position, unit);
+            unit.ChangeStateMachine(unitMove);
+        }
     }
 
     public GameObject FindShortDistanceBuilding(Unit unit)
@@ -116,6 +128,8 @@ public class UnitIdle : UnitStateMachine
 
         for(int i = 0; i < building.Length; i++)
         {
+            if (building[i].GetComponent<Structure>().Status.teamKind == unit.Status.teamKind)
+                continue;
             float distance = Vector2.Distance(building[i].transform.position, unit.transform.position);
 
             if (distance < shortDistance || shortDistance == -1)
@@ -135,14 +149,20 @@ public class UnitIdle : UnitStateMachine
 
 public class UnitMove : UnitStateMachine
 {
-    private Vector2 target = Vector2.zero;
-    private List<Vector2> path;
+    private List<Vector2> path = new List<Vector2>();
     private int nowPath = 0;
 
-    public UnitMove(Vector2 _target, Unit unit)
+    public UnitMove(){  }
+
+    public UnitMove(Vector2 _target)
     {
-        target = _target;
-        path = AstarManager.Instance.AstarPathFinder(unit.transform.position, target);
+        path.Add(_target);
+    }
+
+    public void UnitAstarMove(Vector2 _target, Unit unit)
+    {
+        path = AstarManager.Instance.AstarPathFinder(unit.transform.position, _target);
+        
         nowPath = path.Count - 1;
     }
 
@@ -151,10 +171,19 @@ public class UnitMove : UnitStateMachine
         unit.Animator.SetInteger("AnimationState", (int)Unit.ANIMATION_STATE.MOVE);
         unit.Animator.SetFloat("MoveSpeed", unit.Speed * 2.0f);
         unit.transform.position = Vector2.MoveTowards(unit.transform.position, path[nowPath], unit.Speed * Time.deltaTime);
+
         unit.MoveVector = path[nowPath] - new Vector2(unit.transform.position.x, unit.transform.position.y);
         unit.MoveVector.Normalize();
-        if (unit.transform.position.Equals(path[nowPath]) && nowPath != 0)
-            nowPath -= 1;
+
+        if (unit.transform.position.Equals(path[nowPath]))
+        {
+            if (nowPath != 0)
+                nowPath -= 1;
+            else
+            {
+                unit.ChangeStateMachine(new UnitIdle());
+            }
+        }
     }
 
     public void SendMessage(string message)

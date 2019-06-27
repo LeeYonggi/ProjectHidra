@@ -20,13 +20,13 @@ public class RifleUnit : Unit
         base.UnitUpdate();
     }
 
-    public static bool IsRifleAttack(GameObject target)
+    public bool IsRifleAttack(GameObject target)
     {
-        if(target.tag == "Unit")
+        if(target.tag == "Unit" && target.GetComponent<Unit>().Status.teamKind != Status.teamKind)
         {
             return true;
         }
-        else if(target.tag == "Building")
+        else if(target.tag == "Building" && target.GetComponent<Structure>().Status.teamKind != Status.teamKind)
         {
             return true;
         }
