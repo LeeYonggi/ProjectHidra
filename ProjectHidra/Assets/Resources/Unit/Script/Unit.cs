@@ -40,6 +40,7 @@ public abstract class Unit : MonoBehaviour
     [SerializeField]
     private float speed = 1.0f;
     private Vector2 moveVector = Vector2.zero;
+    private Rigidbody2D rb2d = null;
 
     // 스텟 관련
     [SerializeField]
@@ -59,6 +60,7 @@ public abstract class Unit : MonoBehaviour
     public SpriteRenderer WeaponSprite { get => weaponSprite; set => weaponSprite = value; }
     public UNIT_KIND UnitKind { get => unitKind; set => unitKind = value; }
     public ObjectStatus Status { get => status; set => status = value; }
+    public Rigidbody2D Rb2d { get => rb2d; set => rb2d = value; }
     #endregion
 
     public Unit(UnitAttackState state)
@@ -67,11 +69,15 @@ public abstract class Unit : MonoBehaviour
         Status = new ObjectStatus(ObjectStatus.TEAM_KIND.TEAM_BLUE,
             100, 5, 20);
     }
+
     // Start is called before the first frame update
     protected void Init()
     {
         Animator = GetComponent<Animator>();
+
         weaponSprite = weapon.GetComponent<SpriteRenderer>();
+
+        Rb2d = GetComponent<Rigidbody2D>();
     }
     
     // Update is called once per frame
@@ -170,12 +176,12 @@ public class UnitMove : UnitStateMachine
     {
         unit.Animator.SetInteger("AnimationState", (int)Unit.ANIMATION_STATE.MOVE);
         unit.Animator.SetFloat("MoveSpeed", unit.Speed * 2.0f);
-        unit.transform.position = Vector2.MoveTowards(unit.transform.position, path[nowPath], unit.Speed * Time.deltaTime);
 
-        unit.MoveVector = path[nowPath] - new Vector2(unit.transform.position.x, unit.transform.position.y);
-        unit.MoveVector.Normalize();
+        //unit.transform.position = Vector2.MoveTowards(unit.transform.position, , unit.Speed * Time.deltaTime);
 
-        if (unit.transform.position.Equals(path[nowPath]))
+        bool isEndMove = PlayerMoveTowards(unit, path[nowPath], 0.1f, unit.Speed * Time.deltaTime);
+
+        if (isEndMove)
         {
             if (nowPath != 0)
                 nowPath -= 1;
@@ -184,6 +190,22 @@ public class UnitMove : UnitStateMachine
                 unit.ChangeStateMachine(new UnitIdle());
             }
         }
+    }
+
+    public bool PlayerMoveTowards(Unit unit, Vector2 target, float distance, float speed)
+    {
+        if(Vector2.Distance(unit.transform.position, target) > distance)
+        {
+            Vector2 positionVec2 = new Vector2(unit.transform.position.x, unit.transform.position.y);
+
+            unit.MoveVector = target - positionVec2;
+            unit.MoveVector = unit.MoveVector.normalized;
+
+            unit.transform.position = Vector2.MoveTowards(unit.transform.position, target, speed);
+
+            return false;
+        }
+        return true;
     }
 
     public void SendMessage(string message)
