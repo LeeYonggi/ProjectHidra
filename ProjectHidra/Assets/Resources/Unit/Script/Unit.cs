@@ -47,8 +47,14 @@ public abstract class Unit : MonoBehaviour
     private float shootSpeed = 1.0f;
     [SerializeField]
     private UNIT_KIND unitKind;
+    [SerializeField]
+    private int maxHp;
+    [SerializeField]
+    private int maxDefence;
+    [SerializeField]
+    private int maxAttack;
+
     private ObjectStatus status;
-    
 
     #region Property
     public UnitAttackState UnitAttack { get => unitAttack; set => unitAttack = value; }
@@ -66,8 +72,7 @@ public abstract class Unit : MonoBehaviour
     public Unit(UnitAttackState state)
     {
         UnitAttack = state;
-        Status = new ObjectStatus(ObjectStatus.TEAM_KIND.TEAM_BLUE,
-            100, 5, 20);
+        status = new ObjectStatus(ObjectStatus.TEAM_KIND.TEAM_NONE, maxHp, maxDefence, maxAttack);
     }
 
     // Start is called before the first frame update

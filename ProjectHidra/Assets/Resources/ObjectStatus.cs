@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct ObjectStatus
+public class ObjectStatus
 {
     public enum TEAM_KIND
     {
+        TEAM_NONE,
         TEAM_RED,
         TEAM_BLUE
     }
@@ -26,5 +27,11 @@ public struct ObjectStatus
     public void ChangeTeam(TEAM_KIND team)
     {
         teamKind = team;
+    }
+    public void ChangeStatus(int _hp, int _defence, int _attack)
+    {
+        hp = _hp;
+        defence = _defence;
+        attack = _attack;
     }
 }

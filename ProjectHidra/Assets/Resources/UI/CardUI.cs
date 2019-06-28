@@ -12,10 +12,6 @@ public class CardUI : MonoBehaviour
     // 자신 이미지
     private Image image = null;
 
-    // 캔버스
-    [SerializeField]
-    private Canvas canvas = null;
-
     // 타겟
     [SerializeField]
     private GameObject targetPrefab;
@@ -29,6 +25,10 @@ public class CardUI : MonoBehaviour
 
     // 건물
     private GameObject tile = null;
+
+    // 팀
+    [SerializeField]
+    private ObjectStatus.TEAM_KIND teamKind;
 
     // Start is called before the first frame update
     void Start()
@@ -79,7 +79,9 @@ public class CardUI : MonoBehaviour
         {
             GameObject structure = Instantiate(targetPrefab, tile.transform);
             tile.GetComponent<Tile>().structure = structure;
-            structure.GetComponent<Structure>().AddUnitPrefab("RifleUnit");
+            Structure csStructure = structure.GetComponent<Structure>();
+            csStructure.AddUnitPrefab("RifleUnit");
+            csStructure.Status = new ObjectStatus(teamKind, 0, 0, 0);
         }
     }
 
@@ -95,13 +97,20 @@ public class CardUI : MonoBehaviour
             {
                 if (hit[i].collider != null && hit[i].collider.tag == "Tile")
                 {
+                    afterRenderer.color = new Color(1, 1, 1);
                     afterRenderer.sprite = targetSprite;
                     afterImageObject.transform.position = hit[i].collider.transform.position;
 
                     image.enabled = false;
                     afterImageObject.SetActive(true);
 
-                    tile = hit[i].collider.gameObject;
+                    if (hit[i].collider.GetComponent<Tile>().structure == null)
+                        tile = hit[i].collider.gameObject;
+                    else
+                    {
+                        tile = null;
+                        afterRenderer.color = new Color(1, 0, 0);
+                    }
                 }
             }
         }

@@ -6,8 +6,9 @@ TagManager:
   tags:
   - Unit
   - Building
-  - Tile
   - AfterImage
+  - HexagonTile
+  - RectangleTile
   layers:
   - Default
   - TransparentFX

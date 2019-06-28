@@ -14,8 +14,7 @@ public class Structure : MonoBehaviour
 
     private void Awake()
     {
-        Status = new ObjectStatus(ObjectStatus.TEAM_KIND.TEAM_BLUE,
-            100, 5, 20);
+
     }
 
     // Start is called before the first frame update
