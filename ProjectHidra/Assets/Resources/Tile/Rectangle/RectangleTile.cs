@@ -12,6 +12,8 @@ public class RectangleTile : MonoBehaviour
     void Start()
     {
         isWall = IsTileWall();
+        if (isWall)
+            GetComponent<SpriteRenderer>().color = new Color(1, 0, 0, 0.5f);
     }
 
     // Update is called once per frame
@@ -28,7 +30,7 @@ public class RectangleTile : MonoBehaviour
         int length = hit.Length;
         for (int i = 0; i < length; i++)
         {
-            if (hit[i].collider.tag == "HexagonTile")
+            if (hit[i].collider != null && hit[i].collider.tag == "HexagonTile")
             {
                 return false;
             }

@@ -985,7 +985,7 @@ PrefabInstance:
         type: 3}
       propertyPath: tilePrefab
       value: 
-      objectReference: {fileID: 1314995011327276613, guid: 14579e6e79995374ab57d938925b1628,
+      objectReference: {fileID: 2379151760890110170, guid: 4c1274149a32dbb46984b5915ad18368,
         type: 3}
     - target: {fileID: 6811501881031139523, guid: 2670bae8f0277ca4881febc893946e7c,
         type: 3}
@@ -997,6 +997,12 @@ PrefabInstance:
       propertyPath: tileSize.y
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 6811501881031139523, guid: 2670bae8f0277ca4881febc893946e7c,
+        type: 3}
+      propertyPath: hexagonTilePrefab
+      value: 
+      objectReference: {fileID: 1314995011327276613, guid: 14579e6e79995374ab57d938925b1628,
+        type: 3}
     - target: {fileID: 7048893221585423973, guid: 2670bae8f0277ca4881febc893946e7c,
         type: 3}
       propertyPath: m_LocalPosition.x

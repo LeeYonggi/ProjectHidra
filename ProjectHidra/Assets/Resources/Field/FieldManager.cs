@@ -5,12 +5,13 @@ using UnityEngine;
 public class FieldManager : MonoBehaviour
 {
     [SerializeField]
+    private GameObject hexagonTilePrefab;
+    [SerializeField]
     private GameObject tilePrefab;
     [SerializeField]
     private Vector2 tileSize;
+    Vector2 tileSpriteSize = new Vector2(0, 0);
 
-    // 섹스
-    private Vector2 tileSpriteSize = new Vector2(0, 0);
 
     public List<List<GameObject>> TileList { get; set; } = new List<List<GameObject>>();
     public List<List<GameObject>> HexagonTileList { get; set; } = new List<List<GameObject>>();
@@ -19,8 +20,10 @@ public class FieldManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        tileSpriteSize = tilePrefab.GetComponent<SpriteRenderer>().bounds.size;
+        tileSpriteSize = hexagonTilePrefab.GetComponent<SpriteRenderer>().bounds.size;
         tileSpriteSize.x *= 0.7f;
+
+        PlaceHexagonTiles(transform.position, tileSize, tileSpriteSize);
         PlaceTiles(transform.position, tileSize, tileSpriteSize);
     }
 
@@ -30,27 +33,27 @@ public class FieldManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 타일을 배치합니다.
+    /// 헥사곤 타일을 배치합니다.
     /// </summary>
     /// <param name="pivot">기준점</param>
     /// <param name="size">크기</param>
     /// <param name="spriteSize">스프라이트 크기</param>
-    void PlaceTiles(Vector3 pivot, Vector2 size, Vector2 spriteSize)
+    void PlaceHexagonTiles(Vector3 pivot, Vector2 size, Vector2 spriteSize)
     {
         for (int x = 0; x < size.x; x++)
         {
             int sizeY = (int)(size.y) - Mathf.Abs((int)(size.y * 0.5f) - x);
-            TileList.Add(new List<GameObject>());
+            HexagonTileList.Add(new List<GameObject>());
 
             int emptyNum = (int)size.y - sizeY;
             int empty = emptyNum;
             for (empty = emptyNum; empty > emptyNum * 0.5f; empty--)
             {
-                TileList[x].Add(null);
+                HexagonTileList[x].Add(null);
             }
             for (int y = 0; y < sizeY; y++)
             {
-                GameObject obj = Instantiate(tilePrefab, transform);
+                GameObject obj = Instantiate(hexagonTilePrefab, transform);
                 float firstPosition = 0 - (size.x * spriteSize.x * 0.4f);
 
                 float width  = spriteSize.x * x;
@@ -61,12 +64,45 @@ public class FieldManager : MonoBehaviour
                 obj.transform.position = new Vector3(firstPosition + width,
                     spriteSize.y * 0.5f + height, transform.position.z);
 
-                TileList[x].Add(obj);
+                HexagonTileList[x].Add(obj);
             }
             for (empty = emptyNum; empty > emptyNum * 0.5f; empty--)
             {
-                TileList[x].Add(null);
+                HexagonTileList[x].Add(null);
             }
         }
     }
+
+    /// <summary>
+    /// 일반 타일을 배치합니다.
+    /// </summary>
+    /// <param name="pivot">기준점</param>
+    /// <param name="size">헥사곤 크기</param>
+    /// <param name="hexagonSpriteSize">헥사곤 스프라이트 크기</param>
+    void PlaceTiles(Vector3 pivot, Vector2 size, Vector2 hexagonSpriteSize)
+    {
+        Vector2 firstPosition = Vector2.zero - (size * hexagonSpriteSize * 0.5f);
+        Vector2 lastPosition = Vector2.zero + (size * hexagonSpriteSize * 0.5f);
+        Vector2 spriteSize = tilePrefab.GetComponent<SpriteRenderer>().bounds.size;
+
+        int indexX = 0;
+        for (float x = firstPosition.x; x <= lastPosition.x; x += spriteSize.x, indexX += 1)
+        {
+            TileList.Add(new List<GameObject>());
+
+            int indexY = 0;
+
+            for(float y = firstPosition.y; y <= lastPosition.y; y += spriteSize.y, indexY += 1)
+            {
+                GameObject tile = Instantiate(tilePrefab, transform);
+
+                Vector3 tilePosition = new Vector3(x, y);
+
+                tile.transform.position = tilePosition;
+
+                TileList[indexX].Add(tile);
+            }
+        }
+    }
+
 }
