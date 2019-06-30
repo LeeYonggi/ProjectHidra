@@ -12,14 +12,13 @@ public class RectangleTile : MonoBehaviour
     void Start()
     {
         isWall = IsTileWall();
-        if (isWall)
-            GetComponent<SpriteRenderer>().color = new Color(1, 0, 0, 0.5f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (isWall)
+            GetComponent<SpriteRenderer>().color = new Color(1, 0, 0, 0.5f);
     }
     
     bool IsTileWall()
@@ -30,11 +29,19 @@ public class RectangleTile : MonoBehaviour
         int length = hit.Length;
         for (int i = 0; i < length; i++)
         {
-            if (hit[i].collider != null && hit[i].collider.tag == "HexagonTile")
+            if (hit[i].collider != null && hit[i].collider.tag.Equals("HexagonTile"))
             {
                 return false;
             }
         }
         return true;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //if (collision.gameObject.tag.Equals("Building"))
+        //{
+        //    IsWall = true;
+        //}
     }
 }

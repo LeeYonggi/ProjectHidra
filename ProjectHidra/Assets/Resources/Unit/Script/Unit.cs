@@ -27,6 +27,7 @@ public abstract class Unit : MonoBehaviour
     // 무기
     [SerializeField]
     private GameObject weapon = null;
+    private Animator weaponAnimator = null;
     private SpriteRenderer weaponSprite = null;
 
     // 상태머신
@@ -35,6 +36,9 @@ public abstract class Unit : MonoBehaviour
 
     // 애니메이터
     private Animator animator = null;
+
+    // 스프라이트
+    protected SpriteRenderer spRenderer = null;
 
     // 이동관련
     [SerializeField]
@@ -45,16 +49,11 @@ public abstract class Unit : MonoBehaviour
     // 스텟 관련
     [SerializeField]
     private float shootSpeed = 1.0f;
-    [SerializeField]
-    private UNIT_KIND unitKind;
-    [SerializeField]
-    private int maxHp;
-    [SerializeField]
-    private int maxDefence;
-    [SerializeField]
-    private int maxAttack;
-
+    
     private ObjectStatus status;
+    
+    // 태어난 건물
+    private Structure structure;
 
     #region Property
     public UnitAttackState UnitAttack { get => unitAttack; set => unitAttack = value; }
@@ -64,15 +63,15 @@ public abstract class Unit : MonoBehaviour
     public float ShootSpeed { get => shootSpeed; set => shootSpeed = value; }
     public GameObject Weapon { get => weapon; set => weapon = value; }
     public SpriteRenderer WeaponSprite { get => weaponSprite; set => weaponSprite = value; }
-    public UNIT_KIND UnitKind { get => unitKind; set => unitKind = value; }
     public ObjectStatus Status { get => status; set => status = value; }
     public Rigidbody2D Rb2d { get => rb2d; set => rb2d = value; }
+    public Structure Structure { get => structure; set => structure = value; }
+    public Animator WeaponAnimator { get => weaponAnimator; set => weaponAnimator = value; }
     #endregion
 
     public Unit(UnitAttackState state)
     {
         UnitAttack = state;
-        status = new ObjectStatus(ObjectStatus.TEAM_KIND.TEAM_NONE, maxHp, maxDefence, maxAttack);
     }
 
     // Start is called before the first frame update
@@ -83,6 +82,15 @@ public abstract class Unit : MonoBehaviour
         weaponSprite = weapon.GetComponent<SpriteRenderer>();
 
         Rb2d = GetComponent<Rigidbody2D>();
+
+        spRenderer = GetComponent<SpriteRenderer>();
+
+        WeaponAnimator = weapon.GetComponent<Animator>();
+
+        status = GetComponent<ObjectStatus>();
+
+        if (structure)
+            status.teamKind = structure.Status.teamKind;
     }
     
     // Update is called once per frame
@@ -223,9 +231,17 @@ public class UnitAttackMachine : UnitStateMachine
 {
     private GameObject target;
     Unit myUnit = null;
-    public UnitAttackMachine(GameObject _target)
+
+    public UnitAttackMachine(Unit unit, GameObject _target)
     {
         target = _target;
+        myUnit = unit;
+        unit.WeaponAnimator.SetBool("IsAttack", true);
+    }
+
+    ~UnitAttackMachine()
+    {
+        myUnit.WeaponAnimator.SetBool("IsAttack", false);
     }
 
     public void Update(Unit unit)
@@ -260,8 +276,6 @@ public class UnitAttackMachine : UnitStateMachine
         }
         if (unit.UnitAttack != null)
             unit.UnitAttack.Attack(target);
-
-        myUnit = unit;
     }
 
     public void SendMessage(string message)

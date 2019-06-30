@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3911864914875821246}
   m_Layer: 0
   m_Name: HexagonTile
-  m_TagString: Tile
+  m_TagString: HexagonTile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fdff05f7dcf7774db60aa94332736bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  structure: {fileID: 0}
 --- !u!60 &3911864914875821246
 PolygonCollider2D:
   m_ObjectHideFlags: 0

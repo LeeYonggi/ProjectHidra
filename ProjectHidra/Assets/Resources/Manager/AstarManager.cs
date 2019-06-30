@@ -19,8 +19,8 @@ public class AstarManager : MonoBehaviour
     void Start()
     {
         instance = this;
+        field.PlaceTiles();
         tileList = field.TileList;
-        AstarInit();
     }
 
     // Update is called once per frame
@@ -29,8 +29,14 @@ public class AstarManager : MonoBehaviour
         
     }
 
-    // 리스트 초기화
-    void AstarInit()
+    /// <summary>
+    /// A스타 리스트 초기화
+    /// </summary>
+    /// <param name="nowObject">현재 오브젝트</param>
+    /// <param name="targetObject">타겟 오브젝트</param>
+    /// <param name="nowIndex">현재 오브젝트 인덱스</param>
+    /// <param name="targetIndex">타겟 오브젝트 인덱스</param>
+    void AstarInit(GameObject nowObject, GameObject targetObject, ref Vector2Int nowIndex, ref Vector2Int targetIndex)
     {
         astarTile.Clear();
         for (int i = 0; i < tileList.Count; i++)
@@ -38,7 +44,7 @@ public class AstarManager : MonoBehaviour
             astarTile.Add(new List<TileNode>());
             for (int j = 0; j < tileList[i].Count; j++)
             {
-                if (tileList[i][j] == null || tileList[i][j].GetComponent<Tile>().IsWall == true)
+                if (tileList[i][j] == null || tileList[i][j].GetComponent<RectangleTile>().IsWall == true)
                 {
                     TileNode tileNode = new TileNode();
                     tileNode.tilePos = new Vector2Int(i, j);
@@ -47,6 +53,15 @@ public class AstarManager : MonoBehaviour
                 }
                 else
                     astarTile[i].Add(null);
+
+                if (tileList[i][j] == nowObject)
+                {
+                    nowIndex = new Vector2Int(i, j);
+                }
+                if (tileList[i][j] == targetObject)
+                {
+                    targetIndex = new Vector2Int(i, j);
+                }
             }
         }
         closeTiles.Clear();
@@ -65,22 +80,8 @@ public class AstarManager : MonoBehaviour
 
         if (nowObject == null || targetObject == null)
             return null;
-
-        for(int i = 0; i < tileList.Count; i++)
-        {
-            for(int j = 0; j < tileList.Count; j++)
-            {
-                if (tileList[i][j] == nowObject)
-                {
-                    nowIndex = new Vector2Int(i, j);
-                }
-                if (tileList[i][j] == targetObject)
-                {
-                    targetIndex = new Vector2Int(i, j);
-                }
-            }
-        }
-        AstarInit();
+        
+        AstarInit(nowObject, targetObject, ref nowIndex, ref targetIndex);
 
         // 시작 노드 생성
         TileNode firstNode = TileNodeInit(nowIndex, nowIndex, targetIndex, null);
@@ -111,6 +112,7 @@ public class AstarManager : MonoBehaviour
                 break;
         }
 
+        pathResult.RemoveAt(pathResult.Count - 1);
         return pathResult;
     }
 
@@ -125,7 +127,7 @@ public class AstarManager : MonoBehaviour
         for (int i = 0; i < hit.Length; i++)
         {
             var hitobj = hit[i].collider.gameObject;
-            if (hitobj.CompareTag("Tile"))
+            if (hitobj.CompareTag("RectangleTile"))
             {
                 nowObject = hitobj;
             }
@@ -170,15 +172,11 @@ public class AstarManager : MonoBehaviour
     // 인접 타일 생성, 인접 배열에 목적지가 있는 경우 True를 반환
     bool CreateAdjacentTile(Vector2Int pivot, Vector2Int target)
     {
-        int x = 0;
         for(int i = pivot.x - 1; i <= pivot.x + 1; i++)
         {
             if (i < 0 || i >= astarTile.Count)
                 break;
-            int y = 0;
-            if (x % 2 == 0)
-                y = i % 2;
-            for (int j = pivot.y - 1 + y; j <= pivot.y + y + (x % 2); j++)
+            for (int j = pivot.y - 1; j <= pivot.y + 1; j++)
             {
                 if (j < 0 || j >= astarTile[i].Count)
                     break;
@@ -192,7 +190,6 @@ public class AstarManager : MonoBehaviour
                     openTiles.Add(tile);
                 }
             }
-            x++;
         }
         return false;
     }
@@ -231,15 +228,11 @@ public class AstarManager : MonoBehaviour
     TileNode FindAdjacentTile(TileNode pivot, Vector2Int target)
     {
         TileNode nextNode = null;
-        int x = 0;
         for (int i = pivot.tilePos.x - 1; i <= pivot.tilePos.x + 1; i++)
         {
             if (i < 0 || i >= astarTile.Count)
                 break;
-            int y = 0;
-            if (x % 2 == 0)
-                y = i % 2;
-            for (int j = pivot.tilePos.y - 1 + y; j <= pivot.tilePos.y + y + (x % 2); j++)
+            for (int j = pivot.tilePos.y - 1; j <= pivot.tilePos.y + 1; j++)
             {
                 if (j < 0 || j >= astarTile[i].Count)
                     break;
@@ -264,7 +257,6 @@ public class AstarManager : MonoBehaviour
                     pivot.g += pivot.parent.g;
                 }
             }
-            x += 1;
         }
         return nextNode;
     }

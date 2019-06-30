@@ -20,7 +20,7 @@ public class Structure : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        status = GetComponent<ObjectStatus>();
     }
 
     // Update is called once per frame
@@ -53,6 +53,6 @@ public class Structure : MonoBehaviour
         moveVector += new Vector2(0, -1);
 
         unit.ChangeStateMachine(new UnitMove(moveVector));
-        unit.Status.ChangeTeam(status.teamKind);
+        unit.Structure = this;
     }
 }

@@ -30,6 +30,8 @@ public class CardUI : MonoBehaviour
     [SerializeField]
     private ObjectStatus.TEAM_KIND teamKind;
 
+    public ObjectStatus.TEAM_KIND TeamKind { get => teamKind; set => teamKind = value; }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -78,10 +80,13 @@ public class CardUI : MonoBehaviour
         if (tile)
         {
             GameObject structure = Instantiate(targetPrefab, tile.transform);
+
             tile.GetComponent<Tile>().structure = structure;
+
             Structure csStructure = structure.GetComponent<Structure>();
+
             csStructure.AddUnitPrefab("RifleUnit");
-            csStructure.Status = new ObjectStatus(teamKind, 0, 0, 0);
+            csStructure.GetComponent<ObjectStatus>().teamKind = teamKind;
         }
     }
 
@@ -95,7 +100,7 @@ public class CardUI : MonoBehaviour
 
             for (int i = 0; i < hit.Length; i++)
             {
-                if (hit[i].collider != null && hit[i].collider.tag == "Tile")
+                if (hit[i].collider != null && hit[i].collider.tag == "HexagonTile")
                 {
                     afterRenderer.color = new Color(1, 1, 1);
                     afterRenderer.sprite = targetSprite;

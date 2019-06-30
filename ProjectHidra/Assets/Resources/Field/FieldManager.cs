@@ -11,7 +11,7 @@ public class FieldManager : MonoBehaviour
     [SerializeField]
     private Vector2 tileSize;
     Vector2 tileSpriteSize = new Vector2(0, 0);
-
+    
 
     public List<List<GameObject>> TileList { get; set; } = new List<List<GameObject>>();
     public List<List<GameObject>> HexagonTileList { get; set; } = new List<List<GameObject>>();
@@ -24,9 +24,12 @@ public class FieldManager : MonoBehaviour
         tileSpriteSize.x *= 0.7f;
 
         PlaceHexagonTiles(transform.position, tileSize, tileSpriteSize);
-        PlaceTiles(transform.position, tileSize, tileSpriteSize);
     }
 
+    private void Start()
+    {
+        
+    }
     // Update is called once per frame
     void Update()
     {
@@ -104,5 +107,8 @@ public class FieldManager : MonoBehaviour
             }
         }
     }
-
+    public void PlaceTiles()
+    {
+        PlaceTiles(transform.position, tileSize, tileSpriteSize);
+    }
 }
