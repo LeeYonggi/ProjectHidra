@@ -99,8 +99,12 @@ public abstract class Unit : MonoBehaviour
         unitStateMachine.Update(this);
 
         ChangeFlip(moveVector);
+
+        if(IsUnitDie())
+            UnitDie();
     }
 
+    // 좌우 변환
     public void ChangeFlip(Vector2 directionVector)
     {
         if (directionVector.x > 0)
@@ -109,9 +113,19 @@ public abstract class Unit : MonoBehaviour
             transform.localScale = new Vector3(-1, 1, 1);
     }
 
+    // 상태머신 상태 변경
     public void ChangeStateMachine(UnitStateMachine machine)
     {
         unitStateMachine = machine;
+    }
+
+    // 유닛 죽음
+    public bool IsUnitDie() => (status.Hp < 1);
+
+    private void UnitDie()
+    {
+        ChangeStateMachine(new UnitDie(this));
+        Destroy(weapon);
     }
 
     public abstract void AttackStart(GameObject target);
@@ -128,6 +142,7 @@ public class UnitIdle : UnitStateMachine
     public void Update(Unit unit)
     {
         unit.Animator.SetInteger("AnimationState", (int)Unit.ANIMATION_STATE.IDLE);
+        unit.WeaponAnimator.SetBool("IsAttack", false);
 
         GameObject target = FindShortDistanceBuilding(unit);
         if (target)
@@ -147,7 +162,7 @@ public class UnitIdle : UnitStateMachine
 
         for(int i = 0; i < building.Length; i++)
         {
-            if (building[i].GetComponent<Structure>().Status.teamKind == unit.Status.teamKind)
+            if (building[i].GetComponent<ObjectStatus>().teamKind == unit.Status.teamKind)
                 continue;
             float distance = Vector2.Distance(building[i].transform.position, unit.transform.position);
 
@@ -189,6 +204,7 @@ public class UnitMove : UnitStateMachine
     {
         unit.Animator.SetInteger("AnimationState", (int)Unit.ANIMATION_STATE.MOVE);
         unit.Animator.SetFloat("MoveSpeed", unit.Speed * 2.0f);
+        unit.WeaponAnimator.SetBool("IsAttack", false);
 
         //unit.transform.position = Vector2.MoveTowards(unit.transform.position, , unit.Speed * Time.deltaTime);
 
@@ -237,17 +253,24 @@ public class UnitAttackMachine : UnitStateMachine
         target = _target;
         myUnit = unit;
         unit.WeaponAnimator.SetBool("IsAttack", true);
-    }
 
-    ~UnitAttackMachine()
-    {
-        myUnit.WeaponAnimator.SetBool("IsAttack", false);
+        if (unit.UnitAttack != null)
+        {
+            unit.StartCoroutine(AttackCoroutine());
+        }
     }
-
+    
     public void Update(Unit unit)
     {
         unit.Animator.SetInteger("AnimationState", (int)Unit.ANIMATION_STATE.ATTACK);
         unit.Animator.SetFloat("AttackSpeed", unit.ShootSpeed);
+        unit.WeaponAnimator.SetFloat("AttackSpeed", unit.ShootSpeed);
+
+        if (!target)
+        {
+            unit.ChangeStateMachine(new UnitIdle());
+            return;
+        }
 
         Vector2 diff = target.transform.position - unit.transform.position;
         diff.Normalize();
@@ -274,8 +297,17 @@ public class UnitAttackMachine : UnitStateMachine
             
             unit.Weapon.transform.rotation = Quaternion.Euler(0f, 0f, rot_z);
         }
-        if (unit.UnitAttack != null)
-            unit.UnitAttack.Attack(target);
+
+    }
+
+    public IEnumerator AttackCoroutine()
+    {
+        yield return new WaitForSeconds(0.2f / myUnit.ShootSpeed);
+        while (target)
+        {
+            myUnit.UnitAttack.Attack(target, myUnit.Status.Attack);
+            yield return new WaitForSeconds(0.2f / myUnit.ShootSpeed);
+        }
     }
 
     public void SendMessage(string message)
@@ -284,5 +316,27 @@ public class UnitAttackMachine : UnitStateMachine
         {
 
         }
+    }
+}
+
+public class UnitDie : UnitStateMachine
+{
+    public UnitDie(Unit unit)
+    {
+        unit.Animator.SetInteger("AnimationState", (int)Unit.ANIMATION_STATE.DIE);
+    }
+    public void Update(Unit unit)
+    {
+        if(unit.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && 
+            !unit.Animator.IsInTransition(0))
+        {
+            Object.Destroy(unit.gameObject);
+            unit.ChangeStateMachine(null);
+        }
+    }
+
+    public void SendMessage(string message)
+    {
+
     }
 }

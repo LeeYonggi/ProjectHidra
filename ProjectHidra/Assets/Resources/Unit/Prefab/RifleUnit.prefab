@@ -160,7 +160,6 @@ MonoBehaviour:
   weapon: {fileID: 7871134628426589170}
   speed: 1
   shootSpeed: 1
-  hpBar: {fileID: 7871134628871937648}
 --- !u!114 &1439523289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -462,16 +461,31 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1037996811307103518, guid: 57acec4764cfd1c4f8ee58c7927af34f,
+    - target: {fileID: 2491968713074446624, guid: 57acec4764cfd1c4f8ee58c7927af34f,
         type: 3}
-      propertyPath: parent
-      value: 
-      objectReference: {fileID: 7871134627829199430}
+      propertyPath: m_LocalScale.x
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2491968713074446624, guid: 57acec4764cfd1c4f8ee58c7927af34f,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2491968713074446624, guid: 57acec4764cfd1c4f8ee58c7927af34f,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 6908746678705273326, guid: 57acec4764cfd1c4f8ee58c7927af34f,
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1037996811307103518, guid: 57acec4764cfd1c4f8ee58c7927af34f,
+        type: 3}
+      propertyPath: parent
+      value: 
+      objectReference: {fileID: 7871134627829199430}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 57acec4764cfd1c4f8ee58c7927af34f, type: 3}
 --- !u!224 &7871134628623463660 stripped

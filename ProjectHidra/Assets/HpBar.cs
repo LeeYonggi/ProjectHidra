@@ -20,6 +20,8 @@ public class HpBar : MonoBehaviour
         parentStatus = parent.GetComponent<ObjectStatus>();
 
         parentSprite = parent.GetComponent<SpriteRenderer>();
+
+        MoveToParentPosition();
     }
 
     // Update is called once per frame

@@ -4,13 +4,13 @@ using UnityEngine;
 
 public interface UnitAttackState
 {
-    void Attack(GameObject target);
+    void Attack(GameObject target, int damage);
 }
 
 public class NoneThrowRangeAttack : UnitAttackState
 {
-    public void Attack(GameObject target)
+    public void Attack(GameObject target, int damage)
     {
-        
+        target.GetComponent<ObjectStatus>().Hp -= damage;
     }
 }
