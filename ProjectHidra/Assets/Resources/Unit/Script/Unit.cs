@@ -116,6 +116,8 @@ public abstract class Unit : MonoBehaviour
     // 상태머신 상태 변경
     public void ChangeStateMachine(UnitStateMachine machine)
     {
+        if (unitStateMachine.ToString() == "UnitDie")
+            return;
         unitStateMachine = machine;
     }
 
@@ -128,7 +130,7 @@ public abstract class Unit : MonoBehaviour
         Destroy(weapon);
     }
 
-    public abstract void AttackStart(GameObject target);
+    public abstract bool IsAttackPossible(GameObject target);
 }
 
 public interface UnitStateMachine
@@ -247,19 +249,17 @@ public class UnitAttackMachine : UnitStateMachine
 {
     private GameObject target;
     Unit myUnit = null;
+    float time = 0;
 
     public UnitAttackMachine(Unit unit, GameObject _target)
     {
+        if (!_target)
+            return;
         target = _target;
         myUnit = unit;
         unit.WeaponAnimator.SetBool("IsAttack", true);
-
-        if (unit.UnitAttack != null)
-        {
-            unit.StartCoroutine(AttackCoroutine());
-        }
     }
-    
+
     public void Update(Unit unit)
     {
         unit.Animator.SetInteger("AnimationState", (int)Unit.ANIMATION_STATE.ATTACK);
@@ -274,7 +274,7 @@ public class UnitAttackMachine : UnitStateMachine
 
         Vector2 diff = target.transform.position - unit.transform.position;
         diff.Normalize();
-        
+
         if (unit.Weapon != null)
         {
             float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
@@ -294,20 +294,15 @@ public class UnitAttackMachine : UnitStateMachine
             }
             else
                 unit.ChangeFlip(new Vector2(1, 1));
-            
+
             unit.Weapon.transform.rotation = Quaternion.Euler(0f, 0f, rot_z);
         }
-
-    }
-
-    public IEnumerator AttackCoroutine()
-    {
-        yield return new WaitForSeconds(0.2f / myUnit.ShootSpeed);
-        while (target)
+        if (unit.UnitAttack != null && time >= 0.2f / unit.ShootSpeed)
         {
             myUnit.UnitAttack.Attack(target, myUnit.Status.Attack);
-            yield return new WaitForSeconds(0.2f / myUnit.ShootSpeed);
+            time = 0;
         }
+        time += Time.deltaTime;
     }
 
     public void SendMessage(string message)

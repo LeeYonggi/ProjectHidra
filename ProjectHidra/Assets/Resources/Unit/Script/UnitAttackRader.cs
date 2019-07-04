@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitRader : MonoBehaviour
+public class UnitAttackRader : MonoBehaviour
 {
     [SerializeField]
     private Unit unit = null;
+
     private GameObject targetObject = null;
 
     // Start is called before the first frame update
@@ -20,23 +21,20 @@ public class UnitRader : MonoBehaviour
         
     }
 
-    // 힙으로 저장해야함
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (unit.IsAttackPossible(collision.gameObject) && targetObject == null)
+        if (unit.IsAttackPossible(collision.gameObject))
         {
-            unit.ChangeStateMachine(new UnitMove(collision.transform.position));
+            unit.ChangeStateMachine(new UnitAttackMachine(unit, collision.gameObject));
             targetObject = collision.gameObject;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (targetObject == collision.gameObject)
+        if(collision.gameObject == targetObject)
         {
             unit.ChangeStateMachine(new UnitIdle());
-            targetObject = null;
         }
     }
 }
-

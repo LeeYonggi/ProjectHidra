@@ -33,11 +33,12 @@ public class RifleUnit : Unit
         return false;
     }
 
-    public override void AttackStart(GameObject target)
+    public override bool IsAttackPossible(GameObject target)
     {
         if (IsRifleAttack(target))
         {
-            ChangeStateMachine(new UnitAttackMachine(this, target));
+            return true;
         }
+        return false;
     }
 }
