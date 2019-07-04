@@ -58,3 +58,6 @@ TagManager:
   - name: FrontGun
     uniqueID: 612249691
     locked: 0
+  - name: AfterImage
+    uniqueID: 11920213
+    locked: 0

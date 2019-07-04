@@ -102,7 +102,7 @@ public class CardUI : MonoBehaviour
             {
                 if (hit[i].collider != null && hit[i].collider.tag == "HexagonTile")
                 {
-                    afterRenderer.color = new Color(1, 1, 1);
+                    afterRenderer.color = new Color(1, 1, 1, 0.5f);
                     afterRenderer.sprite = targetSprite;
                     afterImageObject.transform.position = hit[i].collider.transform.position;
 

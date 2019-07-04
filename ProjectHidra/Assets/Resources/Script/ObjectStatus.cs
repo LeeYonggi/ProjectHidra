@@ -17,6 +17,7 @@ public class ObjectStatus : MonoBehaviour
     public int basicHp;
     public int basicDefence;
     public int basicAttack;
+    public int basicCost;
     
     private int hp;
     private int defence;
