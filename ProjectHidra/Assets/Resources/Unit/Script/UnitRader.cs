@@ -8,6 +8,7 @@ public class UnitRader : MonoBehaviour
     private Unit unit = null;
     private GameObject targetObject = null;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,23 +21,10 @@ public class UnitRader : MonoBehaviour
         
     }
 
-    // 힙으로 저장해야함
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (unit.IsAttackPossible(collision.gameObject) && targetObject == null)
-        {
-            unit.ChangeStateMachine(new UnitMove(collision.transform.position));
-            targetObject = collision.gameObject;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (targetObject == collision.gameObject)
-        {
-            unit.ChangeStateMachine(new UnitIdle());
-            targetObject = null;
-        }
+        if(unit.IsAttackPossible(collision.gameObject))
+            unit.UnitStateMachine.SendMessage(collision.gameObject, "AddTarget");
     }
 }
 

@@ -2,6 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false)]
+public sealed class LYGAttribute : System.Attribute
+{
+    public string Name { get; set; } = string.Empty;
+
+    public LYGAttribute(string Name)
+    {
+        this.Name = Name;
+    }
+}
+
+[LYG("개꿀")]
 public class RectangleTile : MonoBehaviour
 {
     bool isWall = false;

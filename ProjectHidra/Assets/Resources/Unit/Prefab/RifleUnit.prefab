@@ -238,6 +238,7 @@ MonoBehaviour:
   basicHp: 100
   basicDefence: 5
   basicAttack: 20
+  basicCost: 0
 --- !u!1 &7871134628426589170
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,9 +21,9 @@ public class UnitAttackRader : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (unit.IsAttackPossible(collision.gameObject))
+        if (unit.IsAttackPossible(collision.gameObject) && targetObject == null)
         {
             unit.ChangeStateMachine(new UnitAttackMachine(unit, collision.gameObject));
             targetObject = collision.gameObject;
@@ -34,7 +34,8 @@ public class UnitAttackRader : MonoBehaviour
     {
         if(collision.gameObject == targetObject)
         {
-            unit.ChangeStateMachine(new UnitIdle());
+            unit.UnitStateMachine.SendMessage(null, "OutOfRange");
+            targetObject = null;
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using UnityEngine.Events;
 
 public class Structure : MonoBehaviour
 {
@@ -26,13 +28,7 @@ public class Structure : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
 
-        if(time > 5)
-        {
-            CreateUnit(unitPrefab);
-            time = 0;
-        }
     }
 
     public void AddUnitPrefab(string unitName)
@@ -41,7 +37,7 @@ public class Structure : MonoBehaviour
         Debug.Log(unitPrefab);
     }
 
-    public void CreateUnit(GameObject _unitPrefab)
+    private void CreateUnit(GameObject _unitPrefab)
     {
         GameObject obj = Instantiate(_unitPrefab);
         Unit unit = obj.GetComponent<Unit>();
@@ -52,7 +48,20 @@ public class Structure : MonoBehaviour
         Vector2 moveVector = transform.position;
         moveVector += new Vector2(0, -1);
 
-        unit.ChangeStateMachine(new UnitMove(moveVector));
+        unit.ChangeStateMachine(new UnitMove(moveVector, unit));
         unit.Structure = this;
     }
+
+
+    public void CreateUnit()
+    {
+        ObjectStatus status = unitPrefab.GetComponent<ObjectStatus>();
+
+        if (GameManager.Instance.ResourceStatus.Mineral >= status.basicCost)
+        {
+            CreateUnit(unitPrefab);
+            GameManager.Instance.ResourceStatus.Mineral -= status.basicCost;
+        }
+    }
+
 }
