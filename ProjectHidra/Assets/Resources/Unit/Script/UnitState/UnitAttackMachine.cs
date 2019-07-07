@@ -54,12 +54,13 @@ public class UnitAttackMachine : UnitStateMachine
 
             unit.Weapon.transform.rotation = Quaternion.Euler(0f, 0f, rot_z);
         }
-        if (unit.UnitAttack != null && time >= 0.2f / unit.ShootSpeed)
+
+        time += Time.deltaTime;
+        if (unit.UnitAttack != null && time >= (0.2f / unit.ShootSpeed))
         {
             myUnit.UnitAttack.Attack(target, myUnit.Status.Attack);
             time = 0;
         }
-        time += Time.deltaTime;
     }
 
     public void SendMessage(GameObject obj, string message)

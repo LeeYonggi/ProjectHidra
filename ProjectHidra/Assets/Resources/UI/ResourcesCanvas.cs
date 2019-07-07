@@ -17,6 +17,9 @@ public class ResourcesCanvas : MonoBehaviour
     [SerializeField]
     private Text messageUI = null;
 
+    [SerializeField]
+    private Text timerUI = null;
+
     private Color messageColor;
 
     private ResourcesStatus resourcesStatus = null;
@@ -31,20 +34,30 @@ public class ResourcesCanvas : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        mineralUI.text = resourcesStatus.Mineral.ToString();
+        mineralUI.text      = resourcesStatus.Mineral.ToString();
         maxStructureUI.text = resourcesStatus.MaxStructure.ToString();
         nowStructureUI.text = resourcesStatus.NowStructure.ToString();
+        timerUI.text        = GameManager.Instance.Timer.ToString();
     }
 
-    void ChangeMessageText(string str)
+    public void ChangeMessageText(string str, float time)
+    {
+        StartCoroutine(MessageCoroutine(str, time));
+    }
+
+    public void ChangeMessageText(string str)
     {
         messageUI.text = str;
-        StopCoroutine("MessageCoroutine");
-        StartCoroutine("MessageCoroutine");
     }
 
-    IEnumerator MessageCoroutine()
+    public void ChangeMessageTextSize()
     {
+
+    }
+
+    IEnumerator MessageCoroutine(string str, float time)
+    {
+        messageUI.text = str;
         yield return new WaitForSeconds(2.0f);
         messageUI.text = string.Empty;
     }

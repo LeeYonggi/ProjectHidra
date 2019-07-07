@@ -23,6 +23,8 @@ public class CardUI : MonoBehaviour
 
     private Vector2 basicPosition;
 
+    private int cardCost = 0;
+
     // 건물
     private GameObject tile = null;
 
@@ -31,15 +33,32 @@ public class CardUI : MonoBehaviour
     private ObjectStatus.TEAM_KIND teamKind;
 
     public ObjectStatus.TEAM_KIND TeamKind { get => teamKind; set => teamKind = value; }
+    public int CardCost
+    {
+        get => cardCost;
+        set
+        {
+            if(value >= 0)
+                cardCost = value;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         button = GetComponent<Button>();
+
         image = GetComponent<Image>();
+
         targetSprite = targetPrefab.GetComponent<SpriteRenderer>().sprite;
+
         afterImageObject = GameObject.FindGameObjectsWithTag("AfterImage")[0];
+
         afterRenderer = afterImageObject.GetComponent<SpriteRenderer>();
+
+        ObjectStatus targetStatus = targetPrefab.GetComponent<ObjectStatus>();
+
+        CardCost = targetStatus.basicCost;
 
         basicPosition = transform.position;
     }
@@ -50,7 +69,7 @@ public class CardUI : MonoBehaviour
         if (isEnterCard)
         {
             // 이동 관련
-            transform.position = Vector3.Lerp(transform.position, Input.mousePosition, 5 * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, Input.mousePosition, 0.07f);
             float distance = Vector2.Distance(new Vector2(basicPosition.x, transform.position.y), basicPosition);
             transform.localScale = new Vector2(Mathf.Max(0, 1 - distance * 0.004f), Mathf.Max(0, 1 - distance * 0.004f));
             
@@ -64,8 +83,8 @@ public class CardUI : MonoBehaviour
         }
         else
         {
-            transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(1, 1), 5 * Time.deltaTime);
-            transform.position = Vector3.Lerp(transform.position, basicPosition, 5 * Time.deltaTime);
+            transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(1, 1), 0.07f);
+            transform.position = Vector3.Lerp(transform.position, basicPosition, 0.07f);
         }
     }
 
@@ -77,17 +96,34 @@ public class CardUI : MonoBehaviour
     public void OnPointerUp()
     {
         isEnterCard = false;
-        if (tile)
+        CreateStructure();
+    }
+
+    void CreateStructure()
+    {
+        if (!tile) return;
+        if (GameManager.Instance.ResourceStatus.Mineral < CardCost)
         {
-            GameObject structure = Instantiate(targetPrefab, tile.transform);
-
-            tile.GetComponent<Tile>().structure = structure;
-
-            Structure csStructure = structure.GetComponent<Structure>();
-
-            csStructure.AddUnitPrefab("RifleUnit");
-            csStructure.GetComponent<ObjectStatus>().teamKind = teamKind;
+            GameManager.Instance.ResourcesCanvas.ChangeMessageText("광물이 부족합니다.", 2.0f);
+            return;
         }
+        if (GameManager.Instance.ResourceStatus.NowStructure > GameManager.Instance.ResourceStatus.MaxStructure)
+        {
+            GameManager.Instance.ResourcesCanvas.ChangeMessageText("보급고를 늘리십시요.", 2.0f);
+            return;
+        }
+
+        GameObject structure = Instantiate(targetPrefab, tile.transform);
+
+        tile.GetComponent<Tile>().structure = structure;
+
+        Structure csStructure = structure.GetComponent<Structure>();
+
+        csStructure.AddUnitPrefab("RifleUnit");
+        csStructure.GetComponent<ObjectStatus>().teamKind = teamKind;
+
+        GameManager.Instance.ResourceStatus.Mineral -= CardCost;
+        GameManager.Instance.ResourceStatus.NowStructure += 1;
     }
 
     void PointPress()
@@ -102,7 +138,7 @@ public class CardUI : MonoBehaviour
             {
                 if (hit[i].collider != null && hit[i].collider.tag == "HexagonTile")
                 {
-                    afterRenderer.color = new Color(1, 1, 1, 0.5f);
+                    afterRenderer.color = new Color(1, 1, 1, 1);
                     afterRenderer.sprite = targetSprite;
                     afterImageObject.transform.position = hit[i].collider.transform.position;
 

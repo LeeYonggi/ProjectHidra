@@ -36,7 +36,11 @@ public class ObjectStatus : MonoBehaviour
 
     public int Defence { get => defence; set => defence = value; }
     public int Attack { get => attack; set => attack = value; }
-    
+
+    public ObjectStatus()
+    {
+    }
+
     public void ChangeStatus(int _hp, int _defence, int _attack)
     {
         Hp = _hp;

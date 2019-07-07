@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1314995011327276614}
   - component: {fileID: 4355227591410792086}
   - component: {fileID: 3911864914875821246}
+  - component: {fileID: 4129644182175998503}
   m_Layer: 0
   m_Name: HexagonTile
   m_TagString: HexagonTile
@@ -125,3 +126,17 @@ PolygonCollider2D:
       - {x: 0.71855307, y: -1.2806947}
       - {x: 1.4619706, y: -0.02849269}
       - {x: 0.73570204, y: 1.2791511}
+--- !u!114 &4129644182175998503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1314995011327276613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8557c5929cc1b7447a7a5e3c16a868bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  icon: {fileID: 7165159354011417253, guid: f8595ac5b37a4874b972bf4eb2557cc2, type: 3}

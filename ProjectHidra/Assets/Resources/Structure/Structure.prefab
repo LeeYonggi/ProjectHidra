@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -1595959712429928438}
   - component: {fileID: 2710099398644886633}
   - component: {fileID: -2080731883384545914}
+  - component: {fileID: -7766779709296430450}
   m_Layer: 0
   m_Name: Structure
   m_TagString: Building
@@ -149,6 +150,21 @@ MonoBehaviour:
   basicHp: 200
   basicDefence: 20
   basicAttack: 30
+  basicCost: 2
+--- !u!114 &-7766779709296430450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473890821855026950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8557c5929cc1b7447a7a5e3c16a868bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 1
+  icon: {fileID: 7165159354011417253, guid: f8595ac5b37a4874b972bf4eb2557cc2, type: 3}
 --- !u!1001 &3483844160574336059
 PrefabInstance:
   m_ObjectHideFlags: 0

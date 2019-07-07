@@ -9,6 +9,7 @@ TagManager:
   - AfterImage
   - HexagonTile
   - RectangleTile
+  - Minimap
   layers:
   - Default
   - TransparentFX
@@ -18,7 +19,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - AfterImage
   - 
   - 
   - 
@@ -57,6 +58,9 @@ TagManager:
     locked: 0
   - name: FrontGun
     uniqueID: 612249691
+    locked: 0
+  - name: Layout
+    uniqueID: 1410075097
     locked: 0
   - name: AfterImage
     uniqueID: 11920213

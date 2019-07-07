@@ -23,6 +23,7 @@ public class Structure : MonoBehaviour
     void Start()
     {
         status = GetComponent<ObjectStatus>();
+        GameManager.Instance.turnStartEvent.AddListener(CreateUnit);
     }
 
     // Update is called once per frame
