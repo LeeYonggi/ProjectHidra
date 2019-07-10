@@ -61,7 +61,7 @@ public class UnitMove : UnitStateMachine
 
     public void SendMessage(GameObject obj, string message)
     {
-        if (message == "AddTarget" && targetObject == null)
+        if (message == "AddTarget" && targetObject != obj)
         {
             UnitAstarMove(obj.transform.position, myUnit);
             targetObject = obj;

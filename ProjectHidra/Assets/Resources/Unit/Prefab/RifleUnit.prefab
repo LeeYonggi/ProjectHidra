@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3697527295280418607}
-  - component: {fileID: 7824924444594151771}
   - component: {fileID: 7824924444594151772}
   m_Layer: 0
   m_Name: AttackRader
@@ -32,22 +31,6 @@ Transform:
   m_Father: {fileID: 7871134627829199481}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &7824924444594151771
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7824924444594151770}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 1.25
 --- !u!114 &7824924444594151772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,6 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unit: {fileID: 7871134627829199484}
+  radius: 1.25
 --- !u!1 &7871134627829199430
 GameObject:
   m_ObjectHideFlags: 0
@@ -253,7 +237,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 2
-  icon: {fileID: 7165159354011417253, guid: f8595ac5b37a4874b972bf4eb2557cc2, type: 3}
+  iconPrefab: {fileID: 7165159354011417253, guid: f8595ac5b37a4874b972bf4eb2557cc2,
+    type: 3}
 --- !u!1 &7871134628426589170
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,7 +347,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7871134628771696101}
-  - component: {fileID: 7871134628771696102}
   - component: {fileID: 7871134628771696103}
   m_Layer: 0
   m_Name: Rader
@@ -385,22 +369,6 @@ Transform:
   m_Father: {fileID: 7871134627829199481}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &7871134628771696102
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7871134628771696100}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 1.9
 --- !u!114 &7871134628771696103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -414,6 +382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unit: {fileID: 7871134627829199484}
+  radius: 2
 --- !u!222 &1585823274
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -538,21 +507,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2491968713074446624, guid: 57acec4764cfd1c4f8ee58c7927af34f,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2491968713074446624, guid: 57acec4764cfd1c4f8ee58c7927af34f,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2491968713074446624, guid: 57acec4764cfd1c4f8ee58c7927af34f,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 6908746678705273326, guid: 57acec4764cfd1c4f8ee58c7927af34f,
         type: 3}

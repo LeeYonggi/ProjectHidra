@@ -15,6 +15,8 @@ public class MinimapObject : MonoBehaviour
     [SerializeField]
     private MINIMAP_STATE state;
     [SerializeField]
+    private GameObject iconPrefab = null;
+
     private GameObject icon = null;
 
     
@@ -25,7 +27,7 @@ public class MinimapObject : MonoBehaviour
     {
         minimap = GameObject.FindGameObjectWithTag("Minimap");
 
-        icon = GameObject.Instantiate(icon, minimap.transform);
+        icon = GameObject.Instantiate(iconPrefab, minimap.transform);
 
         Image iconImage = icon.GetComponent<Image>();
 
@@ -45,6 +47,7 @@ public class MinimapObject : MonoBehaviour
                 break;
             case MINIMAP_STATE.TILE:
                 iconImage.sprite = Resources.Load<Sprite>("UI/MiniMap/Icon/spr_grid_Icon");
+                iconImage.SetNativeSize();
                 rectIcon.SetAsFirstSibling();
                 break;
         }
@@ -52,12 +55,13 @@ public class MinimapObject : MonoBehaviour
 
     void Update()
     {
-        icon.transform.localPosition = transform.position * 10;
+        icon.transform.localPosition = transform.position * 20;
         icon.transform.Translate(new Vector3(0, 0, (int)state));
     }
 
     private void OnDestroy()
     {
-        Destroy(icon);
+        if(icon)
+            Destroy(icon);
     }
 }

@@ -24,6 +24,9 @@ public class FieldManager : MonoBehaviour
         tileSpriteSize.x *= 0.7f;
 
         PlaceHexagonTiles(transform.position, tileSize, tileSpriteSize);
+
+        Destroy(HexagonTileList[1][3]);
+        Destroy(HexagonTileList[3][2]);
     }
 
     private void Start()

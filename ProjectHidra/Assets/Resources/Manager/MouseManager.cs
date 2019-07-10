@@ -67,7 +67,7 @@ public class MouseManager : MonoBehaviour
         if(isDown == true)
         {
             Vector3 movePosition = Input.mousePosition - startMousePosition;
-            movePosition = startCameraPosition - movePosition * 0.01f;
+            movePosition = startCameraPosition - movePosition * 0.005f;
             mainCamera.transform.position = movePosition;
         }
     }

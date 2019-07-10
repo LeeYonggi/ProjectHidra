@@ -3,14 +3,17 @@ using UnityEditor;
 
 public class UnitAttackMachine : UnitStateMachine
 {
-    private GameObject target;
+    private GameObject target = null;
     Unit myUnit = null;
     float time = 0;
 
     public UnitAttackMachine(Unit unit, GameObject _target)
     {
         if (!_target)
+        {
+            unit.ChangeStateMachine(new UnitIdle());
             return;
+        }
         target = _target;
         myUnit = unit;
         if (unit.WeaponAnimator)

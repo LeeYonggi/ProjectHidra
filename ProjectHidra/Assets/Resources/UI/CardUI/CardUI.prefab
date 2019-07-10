@@ -134,9 +134,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 884e12410ddf34041a0ac6717d7268d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 0}
   targetPrefab: {fileID: 473890821855026950, guid: 64826728ba1652a4185c2074804752f7,
     type: 3}
+  teamKind: 2
 --- !u!114 &7518858721687169638
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -164,7 +164,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 1
-  icon: {fileID: 7165159354011417253, guid: f8595ac5b37a4874b972bf4eb2557cc2, type: 3}
+  iconPrefab: {fileID: 7165159354011417253, guid: f8595ac5b37a4874b972bf4eb2557cc2,
+    type: 3}
 --- !u!1001 &3483844160574336059
 PrefabInstance:
   m_ObjectHideFlags: 0

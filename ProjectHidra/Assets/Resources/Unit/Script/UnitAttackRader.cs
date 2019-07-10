@@ -6,6 +6,8 @@ public class UnitAttackRader : MonoBehaviour
 {
     [SerializeField]
     private Unit unit = null;
+    [SerializeField]
+    private float radius;
 
     private GameObject targetObject = null;
 
@@ -18,24 +20,50 @@ public class UnitAttackRader : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        AttackRader();
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    void AttackRader()
     {
-        if (unit.IsAttackPossible(collision.gameObject) && targetObject == null)
+        if (unit.UnitStateMachine.ToString() == "UnitAttackMachine") return;
+
+        GameObject[] buildings = GameObject.FindGameObjectsWithTag("Building");
+        GameObject[] units = GameObject.FindGameObjectsWithTag("Unit");
+
+        float distance = radius;
+        GameObject target = null;
+
+        for (int i = 0; i < buildings.Length; i++)
         {
-            unit.ChangeStateMachine(new UnitAttackMachine(unit, collision.gameObject));
-            targetObject = collision.gameObject;
+            if (unit.IsAttackPossible(buildings[i]) == false)
+                continue;
+
+            float targetDistance = Vector2.Distance(transform.position, buildings[i].transform.position);
+
+            if (distance <= targetDistance)
+                continue;
+
+            distance = targetDistance;
+            target = buildings[i];
         }
-    }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if(collision.gameObject == targetObject)
+        for (int i = 0; i < units.Length; i++)
         {
-            unit.UnitStateMachine.SendMessage(null, "OutOfRange");
-            targetObject = null;
+            if (unit.IsAttackPossible(units[i]) == false)
+                continue;
+
+            float targetDistance = Vector2.Distance(transform.position, units[i].transform.position);
+
+            if (distance <= targetDistance)
+                continue;
+
+            distance = targetDistance;
+            target = units[i];
+        }
+
+        if (target != null)
+        {
+            unit.ChangeStateMachine(new UnitAttackMachine(unit, target));
         }
     }
 }
